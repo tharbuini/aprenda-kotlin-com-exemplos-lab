@@ -1,21 +1,50 @@
-// [Template no Kotlin Playground](https://pl.kotl.in/WcteahpyN)
+enum class Nivel { BASICO, INTERMEDIARIO, AVANCADO }
 
-enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
+class Usuario(val nome: String, val idade: Int)
 
-class Usuario
+data class ConteudoEducacional(val nome: String, val duracao: Int = 60)
 
-data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
+data class Formacao(val nome: String, val conteudos: MutableList<ConteudoEducacional>, val nivel: Nivel) {
+    private val inscritos = mutableListOf<Usuario>()
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+    fun matricular(usuario: Usuario) = inscritos.add(usuario)
+    fun alunosInscritos(): MutableList<Usuario> = inscritos
+    fun adicionarConteudo(conteudo: ConteudoEducacional) = conteudos.add(conteudo)
 
-    val inscritos = mutableListOf<Usuario>()
-    
-    fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+    fun descricao() {
+        println()
+        println("Nome: $nome")
+        println("Conteúdos:")
+        for(conteudo in conteudos) { println("\t${conteudo.nome} - ${conteudo.duracao} mins") }
+
+        when(nivel) {
+            Nivel.BASICO -> println("Básico")
+            Nivel.INTERMEDIARIO -> println("Intermediário")
+            Nivel.AVANCADO -> println("Avançado")
+        }
+        println()
     }
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    val usuario1 = Usuario("Thiago", 22)
+    val usuario2 = Usuario("Ana", 18)
+
+    val conteudo1 = ConteudoEducacional("Básico em Kotlin", 6)
+    val conteudo2 = ConteudoEducacional("POO em Kotlin", 6)
+    val listaConteudo = mutableListOf(conteudo1, conteudo2)
+
+    val formacao = Formacao("Formação - Backend em Kotlin", listaConteudo, Nivel.INTERMEDIARIO)
+    formacao.matricular(usuario1)
+    formacao.matricular(usuario2)
+
+    formacao.descricao()
+
+    for(aluno in formacao.alunosInscritos()) {
+        println("O aluno ${aluno.nome} de ${aluno.idade} anos está inscrito na formação.")
+    }
+
+    val conteudo3 = ConteudoEducacional("Funções em Kotlin", 4)
+    formacao.adicionarConteudo(conteudo3)
+    formacao.descricao()
 }
